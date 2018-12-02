@@ -1,4 +1,5 @@
 mod day1;
+mod day2;
 
 use std::env;
 use std::io::BufReader;
@@ -15,6 +16,8 @@ fn main() {
     match challenge.as_ref() {
         "1a" => Puzzle { solution: day1::part1, input: "01.txt" }.solve(),
         "1b" => Puzzle { solution: day1::part2, input: "01.txt" }.solve(),
+        "2a" => Puzzle { solution: day2::part1, input: "02.txt" }.solve(),
+        "2b" => Puzzle { solution: day2::part2, input: "02.txt" }.solve(),
         _ => panic!("challenge invalid")
     };
 }
