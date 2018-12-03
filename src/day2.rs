@@ -1,13 +1,14 @@
 use std::collections::HashMap;
+use util::Result;
 
-pub fn part1(input: &str) -> i32 {
+pub fn part1(input: &str) -> Result<i32> {
     let count = input.lines()
         .map(|x| find_repeated(x))
         .fold(TotalRepeated { twice: 0, thrice: 0 }, |mut acc, x| {
               acc.increment(x);
               acc
         });
-    count.twice * count.thrice
+    Ok(count.twice * count.thrice)
 }
 
 struct TotalRepeated {
@@ -46,7 +47,7 @@ fn find_repeated(s: &str) -> Repeated {
 }
 
 
-pub fn part2(input: &str) -> String {
+pub fn part2(input: &str) -> Result<String> {
     let lines: Vec<&str> = input.lines().collect();
     let mut c = 0;
     loop {
@@ -57,7 +58,7 @@ pub fn part2(input: &str) -> String {
         }).collect();
 
         match find_same_string(removed_char) {
-            Some(s) => return s,
+            Some(s) => return Ok(s),
             None => ()
         }
         c += 1;

@@ -2,3 +2,7 @@
 name = "aoc-2018"
 version = "0.1.0"
 authors = ["Dennis Kao dshnkao@gmail.com"]
+
+[dependencies]
+regex = "1"
+lazy_static = "1.2.0"
