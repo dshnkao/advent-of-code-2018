@@ -1,28 +1,24 @@
-use regex::Regex;
 use regex::Captures;
+use regex::Regex;
+use std::collections::HashMap;
 use util::Result;
-
-pub fn part1(input: &str) -> Result<usize>  {
-    let mut fabric = vec![vec![0; 1000]; 1000];
-    input.lines().map(|claim| {
-        let claim = parse_line(claim)?;
-        Ok(update_fabric(&mut fabric, &claim))
-    }).collect::<Result<Vec<_>>>()?;
-
-    Ok(fabric.iter().fold(0, |acc, v| {
-        acc + v.iter().filter(|&&x| x > 1).count()
-    }))
-}
 
 // top left 0,0
 #[derive(Debug)]
 struct Claim {
     id: usize,
-    x: usize,
-    y: usize,
+    coord: Coord,
     width: usize,
     height: usize,
 }
+
+#[derive(Debug, PartialEq, Eq, Hash)]
+struct Coord {
+    x: usize,
+    y: usize,
+}
+
+type Fabric = HashMap<Coord, usize>;
 
 fn parse_line(claim: &str) -> Result<Claim> {
     lazy_static! {
@@ -45,19 +41,55 @@ fn parse_line(claim: &str) -> Result<Claim> {
             let y = parse_num(&cap, 3, "y not found")?;
             let width = parse_num(&cap, 4, "width not found")?;
             let height = parse_num(&cap, 5, "height not found")?;
-            Ok(Claim { id, x, y, width, height})
+            let coord = Coord { x, y };
+            Ok(Claim { id, coord, width, height})
         })
 }
 
-fn update_fabric(fabric: &mut Vec<Vec<i32>>, claim: &Claim) {
-    for i in claim.x..claim.x+claim.width {
-        for j in claim.y..claim.y+claim.height {
-            fabric[i][j] += 1
+fn update_fabric(fabric: &mut Fabric, claim: &Claim) {
+    for x in claim.coord.x .. claim.coord.x + claim.width {
+        for y in claim.coord.y .. claim.coord.y + claim.height {
+            *fabric.entry(Coord { x, y } ).or_default() += 1
         }
     }
 }
 
+fn non_overlap_claim(fabric: &Fabric, claim: &Claim) -> bool {
+    for x in claim.coord.x .. claim.coord.x + claim.width {
+        for y in claim.coord.y .. claim.coord.y + claim.height {
+            let coord = Coord {x, y};
+            if fabric.get(&coord) != Some(&1) {
+                return false
+            }
+        }
+    }
+    true
+}
 
-pub fn part2(input: &str) -> Result<i32> {
-    Ok(1)
+pub fn part1(input: &str) -> Result<usize> {
+    let mut fabric = Fabric::new();
+    input.lines().map(|claim| {
+        let claim = parse_line(claim)?;
+        Ok(update_fabric(&mut fabric, &claim))
+    }).collect::<Result<Vec<_>>>()?;
+
+    Ok(fabric.values().filter(|&&x| x > 1).count())
+}
+
+pub fn part2(input: &str) -> Result<usize> {
+
+    let mut fabric = Fabric::new();
+    let mut claims = Vec::new();
+
+    input.lines().map(|claim| {
+        let claim = parse_line(claim)?;
+        update_fabric(&mut fabric, &claim);
+        claims.push(claim);
+        Ok(())
+    }).collect::<Result<Vec<_>>>()?;
+
+    claims.into_iter()
+        .find(|c| non_overlap_claim(&fabric, &c))
+        .ok_or("no claim found")
+        .map(|c| c.id)
 }
