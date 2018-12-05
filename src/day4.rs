@@ -35,6 +35,11 @@ struct Metrics {
     slept_per_minute: [usize; 60],
 }
 
+struct Minute {
+    minute: usize,
+    count: usize,
+}
+
 impl Metrics {
     fn update(&mut self, sleep_at: &NaiveDateTime, wakeup_at: &NaiveDateTime) {
         let mut cursor = sleep_at.clone();
@@ -44,11 +49,11 @@ impl Metrics {
             cursor += Duration::minutes(1)
         }
     }
-    fn most_slept_minute(&self) -> Result<usize> {
+    fn most_slept_minute(&self) -> Result<Minute> {
         self.slept_per_minute.into_iter()
             .enumerate()
             .max_by_key(|(_, &x)| x)
-            .map(|(i, _)| i)
+            .map(|(minute, &count)| Minute { minute, count })
             .ok_or("didn't sleep")
     }
 }
@@ -95,7 +100,7 @@ fn parse_line(entry: &str, curr_guard_id: &mut Option<usize>) -> Result<Entry> {
         })
 }
 
-pub fn part1(input: &str) -> Result<usize> {
+fn read_schedule(input: &str) -> Result<GuardMetrics> {
     let mut timeline: Vec<&str> = input.lines().collect();
     timeline.sort();
 
@@ -106,6 +111,7 @@ pub fn part1(input: &str) -> Result<usize> {
     let entries = timeline.iter()
         .map(|x| parse_line(x, &mut curr_guard_id))
         .collect::<Result<Vec<_>>>()?;
+
     entries.iter().map(|x| {
         match x.action {
             Action::BeginsShift => Ok(()),
@@ -124,9 +130,23 @@ pub fn part1(input: &str) -> Result<usize> {
         }
     }).collect::<Result<Vec<_>>>()?;
 
+    Ok(guard_metrics)
+}
+
+pub fn part1(input: &str) -> Result<usize> {
+    let guard_metrics = read_schedule(input)?;
     let (guard_id, metrics) = guard_metrics.iter()
-        .max_by(|(_,v1), (_,v2)| v1.total_sleep_time.cmp(&v2.total_sleep_time))
+        .max_by_key(|(_, v)| v.total_sleep_time)
         .ok_or("most slept guard not found")?;
     let most_slept_minute = metrics.most_slept_minute()?;
-    Ok(guard_id * most_slept_minute)
+    Ok(guard_id * most_slept_minute.minute)
+}
+
+pub fn part2(input: &str) -> Result<usize> {
+    let guard_metrcis = read_schedule(input)?;
+    let (guard_id, metrics) = guard_metrcis.iter()
+        .max_by_key(|(_, v)| v.most_slept_minute().map(|x| x.count).unwrap_or(0))
+        .ok_or("no guard found")?;
+    let most_slept_minute = metrics.most_slept_minute()?;
+    Ok(guard_id * most_slept_minute.minute)
 }

@@ -29,7 +29,7 @@ fn main() -> Result<()> {
         "3a" => Puzzle { solution: day3::part1, input: "03.txt" }.solve(),
         "3b" => Puzzle { solution: day3::part2, input: "03.txt" }.solve(),
         "4a" => Puzzle { solution: day4::part1, input: "04.txt" }.solve(),
-        //"4b" => Puzzle { solution: day4::part2, input: "04.txt" }.solve(),
+        "4b" => Puzzle { solution: day4::part2, input: "04.txt" }.solve(),
         _ => Err("invalid challenge"),
     }?;
 
