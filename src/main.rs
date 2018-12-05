@@ -1,9 +1,11 @@
 #[macro_use] extern crate lazy_static;
+extern crate chrono;
 extern crate regex;
 
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 mod util;
 
 use std::env;
@@ -26,6 +28,8 @@ fn main() -> Result<()> {
         "2b" => Puzzle { solution: day2::part2, input: "02.txt" }.solve(),
         "3a" => Puzzle { solution: day3::part1, input: "03.txt" }.solve(),
         "3b" => Puzzle { solution: day3::part2, input: "03.txt" }.solve(),
+        "4a" => Puzzle { solution: day4::part1, input: "04.txt" }.solve(),
+        //"4b" => Puzzle { solution: day4::part2, input: "04.txt" }.solve(),
         _ => Err("invalid challenge"),
     }?;
 
