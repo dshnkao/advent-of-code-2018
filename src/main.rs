@@ -6,6 +6,7 @@ mod day1;
 mod day2;
 mod day3;
 mod day4;
+mod day5;
 mod util;
 
 use std::env;
@@ -30,6 +31,8 @@ fn main() -> Result<()> {
         "3b" => Puzzle { solution: day3::part2, input: "03.txt" }.solve(),
         "4a" => Puzzle { solution: day4::part1, input: "04.txt" }.solve(),
         "4b" => Puzzle { solution: day4::part2, input: "04.txt" }.solve(),
+        "5a" => Puzzle { solution: day5::part1, input: "05.txt" }.solve(),
+        "5b" => Puzzle { solution: day5::part2, input: "05.txt" }.solve(),
         _ => Err("invalid challenge"),
     }?;
 
