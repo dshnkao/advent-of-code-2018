@@ -1,5 +1,5 @@
 [package]
-name = "aoc-2018"
+name = "aoc"
 version = "0.1.0"
 authors = ["Dennis Kao dshnkao@gmail.com"]
 
@@ -7,3 +7,15 @@ authors = ["Dennis Kao dshnkao@gmail.com"]
 regex = "1"
 lazy_static = "1.2.0"
 chrono = "0.4"
+
+[dev-dependencies]
+criterion = "0.2"
+
+[lib]
+name = "aoc_lib"
+path = "src/lib.rs"
+
+[[bench]]
+name = "aoc_benchmark"
+harness = false
+path = "benches/benches.rs"

@@ -1,14 +1,6 @@
-#[macro_use] extern crate lazy_static;
-extern crate chrono;
-extern crate regex;
+extern crate aoc_lib;
 
-mod day1;
-mod day2;
-mod day3;
-mod day4;
-mod day5;
-mod util;
-
+use aoc_lib::*;
 use std::env;
 use std::io::BufReader;
 use std::io::prelude::*;
