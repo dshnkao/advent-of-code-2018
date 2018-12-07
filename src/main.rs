@@ -6,7 +6,7 @@ use std::io::BufReader;
 use std::io::prelude::*;
 use std::fs::File;
 use std::fmt::Display;
-use util::Result;
+use crate::util::Result;
 
 fn main() -> Result<()> {
 

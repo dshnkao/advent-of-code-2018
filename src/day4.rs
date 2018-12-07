@@ -2,7 +2,7 @@ use chrono::{Duration, NaiveDateTime, Timelike};
 use regex::Regex;
 use std::collections::HashMap;
 use std::str::FromStr;
-use util::Result;
+use crate::util::Result;
 
 #[derive(Debug)]
 struct Entry {

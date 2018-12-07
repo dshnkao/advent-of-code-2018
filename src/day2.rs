@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use util::Result;
+use crate::util::Result;
 
 pub fn part1(input: &str) -> Result<i32> {
     let count = input.lines()

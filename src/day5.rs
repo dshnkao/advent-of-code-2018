@@ -1,4 +1,4 @@
-use util::Result;
+use crate::util::Result;
 
 fn is_reactive(a: &char, b: &char) -> bool {
     a != b && (a.to_ascii_lowercase() == *b || b.to_ascii_lowercase() == *a)
