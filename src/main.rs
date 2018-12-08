@@ -25,6 +25,8 @@ fn main() -> Result<()> {
         "4b" => Puzzle { solution: day4::part2, input: "04.txt" }.solve(),
         "5a" => Puzzle { solution: day5::part1, input: "05.txt" }.solve(),
         "5b" => Puzzle { solution: day5::part2, input: "05.txt" }.solve(),
+        "6a" => Puzzle { solution: day6::part1, input: "06.txt" }.solve(),
+        "6b" => Puzzle { solution: day6::part2, input: "06.txt" }.solve(),
         _ => Err("invalid challenge"),
     }?;
 
