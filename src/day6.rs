@@ -78,6 +78,12 @@ impl Grid {
                 }
             });
     }
+
+    fn distance_to_all_coord(&self, location: &Coord) -> usize {
+        self.buf.keys()
+            .map(|&coord| manhattan_distance(&coord, &location))
+            .sum()
+    }
 }
 
 pub fn part1(input: &str) -> Result<usize> {
@@ -103,5 +109,24 @@ pub fn part1(input: &str) -> Result<usize> {
 
 
 pub fn part2(input: &str) -> Result<usize> {
-    Err("todo")
+    let grid = input.lines()
+        .map(|x| parse_line(x))
+        .filter_map(::std::result::Result::ok)
+        .fold(Grid::new(), |mut grid, x| {
+            grid.insert(x);
+            grid
+        });
+
+    let mut region_size = 0;
+    for x in grid.min_x ..= grid.max_x {
+        for y in grid.min_y ..= grid.max_y {
+            let size = grid.distance_to_all_coord(&Coord { x, y } );
+            if size < 10000 {
+                region_size += 1;
+            }
+        }
+    }
+
+    Ok(region_size)
 }
+
