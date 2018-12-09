@@ -66,6 +66,16 @@ fn day6b(c: &mut Criterion) {
     c.bench_function("day6b", move |b| b.iter(|| day6::part2(&buf)));
 }
 
+fn day7a(c: &mut Criterion) {
+    let buf = include_str!("../data/07.txt");
+    c.bench_function("day7a", move |b| b.iter(|| day7::part1(&buf)));
+}
+
+fn day7b(c: &mut Criterion) {
+    let buf = include_str!("../data/07.txt");
+    c.bench_function("day7b", move |b| b.iter(|| day7::part2(&buf)));
+}
+
 criterion_group!(
     benches,
     day1a,
@@ -80,6 +90,8 @@ criterion_group!(
     day5b,
     day6a,
     day6b,
+    day7a,
+    day7b,
 );
 
 criterion_main!(benches);
