@@ -11,7 +11,7 @@ pub fn part1(input: &str) -> Result<i32> {
 pub fn part2(input: &str) -> Result<i32> {
     let mut frequency = 0;
     let mut freq_history = HashSet::new();
-    freq_history.insert(frequency.clone());
+    freq_history.insert(frequency);
 
     let frequencies = input
         .lines()

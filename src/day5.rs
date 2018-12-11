@@ -1,17 +1,17 @@
 use crate::util::Result;
 
-fn is_reactive(a: &char, b: &char) -> bool {
-    a != b && (a.to_ascii_lowercase() == *b || b.to_ascii_lowercase() == *a)
+fn is_reactive(a: char, b: char) -> bool {
+    a != b && (a.to_ascii_lowercase() == b || b.to_ascii_lowercase() == a)
 }
 
 fn react_polymer(polymer: &str, ignore_chars: &[char]) -> Vec<char> {
     let mut reacted_polymer: Vec<char> = Vec::new();
     polymer.chars()
         .filter(|x| x.is_alphabetic())
-        .filter(|x| !ignore_chars.into_iter().any(|c| c == x))
+        .filter(|x| !ignore_chars.iter().any(|c| c == x))
         .for_each(|cur| {
             match reacted_polymer.last().cloned() {
-                Some(prv) if is_reactive(&prv, &cur) => drop(reacted_polymer.pop()),
+                Some(prv) if is_reactive(prv, cur) => { reacted_polymer.pop(); },
                 Some(_) => reacted_polymer.push(cur),
                 None => reacted_polymer.push(cur),
             }

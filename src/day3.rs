@@ -70,7 +70,8 @@ pub fn part1(input: &str) -> Result<usize> {
     let mut fabric = Fabric::new();
     input.lines().map(|claim| {
         let claim = parse_line(claim)?;
-        Ok(update_fabric(&mut fabric, &claim))
+        update_fabric(&mut fabric, &claim);
+        Ok(())
     }).collect::<Result<Vec<_>>>()?;
 
     Ok(fabric.values().filter(|&&x| x > 1).count())

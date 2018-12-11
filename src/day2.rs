@@ -51,16 +51,16 @@ pub fn part2(input: &str) -> Result<String> {
     let lines: Vec<&str> = input.lines().collect();
     let mut c = 0;
     loop {
-        let removed_char = lines.iter().map(|x| {
-            let mut s = String::from(x.as_ref());
+        let removed_char = lines.iter().map(|&x| {
+            let mut s = String::from(x);
             s.remove(c);
             s
         }).collect();
 
-        match find_same_string(removed_char) {
-            Some(s) => return Ok(s),
-            None => ()
+        if let Some(s) = find_same_string(removed_char) {
+            return Ok(s);
         }
+
         c += 1;
     }
 }

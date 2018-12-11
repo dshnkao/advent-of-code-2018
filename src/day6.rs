@@ -63,20 +63,22 @@ impl Grid {
                     Ordering::Greater => Some((c2, dist2, true)),
                     Ordering::Equal => Some((c1, dist1, false)),
                 }
-            }).unwrap_or(Some((c2, dist2, true)))
+            }).unwrap_or_else(|| Some((c2, dist2, true)))
         };
-        self.buf.keys()
+        let min_coord = self.buf.keys()
             .map(|&coord| (coord, manhattan_distance(&coord, &location)))
-            .fold(None, |acc, x| find_min(acc, x))
-            .map(|(coord, _, unique)| {
-                if self.on_boundary(&location) {
-                    *self.buf.entry(coord).or_default() = None
-                }
-                else if unique {
-                    let counter = self.buf.entry(coord).or_default();
-                    *counter = counter.map(|x| x + 1);
-                }
-            });
+            .fold(None, find_min);
+
+        match min_coord {
+            Some((coord, _, _)) if self.on_boundary(&location) => {
+                *self.buf.entry(coord).or_default() = None;
+            },
+            Some((coord, _, true)) => {
+                let counter = self.buf.entry(coord).or_default();
+                *counter = counter.map(|x| x + 1);
+            },
+            _ => (),
+        }
     }
 
     fn distance_to_all_coord(&self, location: &Coord) -> usize {

@@ -42,7 +42,7 @@ struct Minute {
 
 impl Metrics {
     fn update(&mut self, sleep_at: &NaiveDateTime, wakeup_at: &NaiveDateTime) {
-        let mut cursor = sleep_at.clone();
+        let mut cursor = *sleep_at;
         while cursor < *wakeup_at {
             self.total_sleep_time += 1;
             self.slept_per_minute[cursor.minute() as usize] += 1;
@@ -50,7 +50,7 @@ impl Metrics {
         }
     }
     fn most_slept_minute(&self) -> Result<Minute> {
-        self.slept_per_minute.into_iter()
+        self.slept_per_minute.iter()
             .enumerate()
             .max_by_key(|(_, &x)| x)
             .map(|(minute, &count)| Minute { minute, count })
@@ -79,7 +79,7 @@ fn parse_line(entry: &str, curr_guard_id: &mut Option<usize>) -> Result<Entry> {
                 Some(Entry { time, guard_id, action } )
             })
             .unwrap_or({
-                let guard_id = curr_guard_id.clone()?;
+                let guard_id = (*curr_guard_id)?;
                 guard_action.parse::<Action>()
                     .ok()
                     .map(|action| Entry { time, guard_id, action })
@@ -93,10 +93,9 @@ fn parse_line(entry: &str, curr_guard_id: &mut Option<usize>) -> Result<Entry> {
             let time = cap.get(1)
                 .and_then(|x| NaiveDateTime::parse_from_str(x.as_str(), "%Y-%m-%d %H:%M").ok())
                 .ok_or("failed to parse timestamp")?;
-            let entry = cap.get(2)
+            cap.get(2)
                 .and_then(|x| parse_action(x.as_str(), time))
-                .ok_or("failed to parse action");
-            entry
+                .ok_or("failed to parse action")
         })
 }
 
